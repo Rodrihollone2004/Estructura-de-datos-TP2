@@ -1,6 +1,4 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StaticTDASet : TDA
 {
@@ -77,25 +75,26 @@ public class StaticTDASet : TDA
 
     public override TDA Union(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize + otherSet.Cardinality()); // Nuevo conjunto con capacidad suficiente
+        StaticTDASet resultSet = new StaticTDASet(maxSize + otherSet.Cardinality());
         foreach (int item in elements)
         {
-            resultSet.Add(item); // Agrega elementos del conjunto actual
+            resultSet.Add(item);
         }
+
         for (int i = 0; i < otherSet.Cardinality(); i++)
         {
-            int otherElement = otherSet.GetElementAt(i);
-            resultSet.Add(otherElement); // Agrega elementos del otro conjunto
+            int otherElement = otherSet.GetElement(i);
+            resultSet.Add(otherElement); 
         }
         return resultSet;
     }
 
     public override TDA Intersection(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize); // Nuevo conjunto con capacidad suficiente
+        StaticTDASet resultSet = new StaticTDASet(maxSize);
         for (int i = 0; i < actualSize; i++)
         {
-            if (otherSet.Contains(elements[i])) // Agrega solo los elementos que están en ambos conjuntos
+            if (otherSet.Contains(elements[i])) 
             {
                 resultSet.Add(elements[i]);
             }
@@ -105,10 +104,10 @@ public class StaticTDASet : TDA
 
     public override TDA Difference(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize); // Nuevo conjunto con capacidad suficiente
+        StaticTDASet resultSet = new StaticTDASet(maxSize); 
         for (int i = 0; i < actualSize; i++)
         {
-            if (!otherSet.Contains(elements[i])) // Agrega solo los elementos que no están en el otro conjunto
+            if (!otherSet.Contains(elements[i])) 
             {
                 resultSet.Add(elements[i]);
             }
@@ -116,10 +115,10 @@ public class StaticTDASet : TDA
         return resultSet;
     }
 
-    public override int GetElementAt(int index)
+    public override int GetElement(int index)
     {
         if (index < 0 || index >= actualSize)
-            throw new IndexOutOfRangeException("Índice fuera de rango.");
+            Debug.Log("No está"); 
         return elements[index];
     }
 }
