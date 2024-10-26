@@ -32,11 +32,11 @@ public class AVLTree : Tree
         if (fe < -1 && value > (node.Right?.Value ?? 0))
             return LeftRotate(node);
 
-        //if (fe > 1 && value > node.Left.Value)
-        //    return DoubleRightRotate(node);
+        if (fe > 1 && value > (node.Left?.Value ?? 0))
+            return DoubleRightRotate(node);
 
-        //if (fe < -1 && value < node.Right.Value)
-        //    return DoubleLeftRotate(node);
+        if (fe < -1 && value < (node.Right?.Value ?? 0))
+            return DoubleLeftRotate(node);
 
         return node;
     }
@@ -48,7 +48,7 @@ public class AVLTree : Tree
         {
             int rightHeight = node.Right != null ? CalculateHeight(node.Right) : 0;
             int leftHeight = node.Left != null ? CalculateHeight(node.Left) : 0;
-            fe = rightHeight - leftHeight;
+            fe = leftHeight - rightHeight;
         }
 
         return fe;
