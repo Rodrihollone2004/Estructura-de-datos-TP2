@@ -2,8 +2,8 @@ public abstract class TDA
 {
     public abstract bool Add(int element);  //Agrega un elemento al conjunto 
     public abstract bool Remove(int element); //Elimina un elemento del conjunto
-    public abstract bool Contains(int element); //Verifica si el conjunto contiene un elemento
-    public abstract void Show(); //Muestra todos los elementos del conjunto
+    public abstract bool Contains(int element); //Verifica si el conjun to contiene un elemento
+    public abstract string Show(); //Muestra todos los elementos del conjunto
     public abstract int Cardinality(); //Devuelve la cardinalidad del conjunto (tamaño actual)
     public abstract bool isEmpty(); //Verifica si el conjunto está vacío
     public abstract int GetElement(int index); //Para acceder al elemento dentro del otro nodo //Este lo agregué yo

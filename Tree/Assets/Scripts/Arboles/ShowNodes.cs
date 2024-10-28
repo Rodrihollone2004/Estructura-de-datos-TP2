@@ -6,12 +6,12 @@ public class ShowNodes : MonoBehaviour
     [SerializeField] private GameObject nodeObject;
     [SerializeField] private Material lineMaterial;
     private TMP_Text nodeValue;
-    private Transform transform;
+    private Transform transformNodes;
 
     private void Awake()
     {
         nodeValue = nodeObject.GetComponentInChildren<TMP_Text>();
-        transform = nodeObject.GetComponent<Transform>();
+        transformNodes = nodeObject.GetComponent<Transform>();
     }
 
     //Método para que se muestren los nodos en Unity
@@ -21,7 +21,7 @@ public class ShowNodes : MonoBehaviour
         {
             nodeValue.text = node.Value.ToString();
 
-            GameObject newNode = Instantiate(nodeObject, position, transform.rotation);
+            GameObject newNode = Instantiate(nodeObject, position, transformNodes.rotation);
 
             if (node.Left != null)
             {

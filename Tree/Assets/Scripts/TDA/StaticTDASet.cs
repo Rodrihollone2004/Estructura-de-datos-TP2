@@ -40,23 +40,25 @@ public class StaticTDASet : TDA
         return false;
     }
 
-    public override void Show()
+    public override string Show()
     {
         if (!isEmpty())
         {
-            string showValues = "";
-            for (int i = 0; i < elements.Length; i++)
+            string textStatic = "";
+            for (int i = 0; i < actualSize; i++)
             {
-                showValues += elements[i].ToString() + ", ";
+                textStatic += elements[i].ToString() + ", ";
             }
-
-            Debug.Log("Los números del conjunto son: " + showValues);
+        
+            return textStatic;
         }
+
+        return "";
     }
 
     public override int Cardinality()
     {
-        return elements[actualSize];
+        return actualSize;
     }
 
     public override bool isEmpty()
@@ -82,50 +84,50 @@ public class StaticTDASet : TDA
 
     public override TDA Union(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize + otherSet.Cardinality());
+        StaticTDASet unionSet = new StaticTDASet(maxSize + otherSet.Cardinality());
         foreach (int item in elements)
         {
-            resultSet.Add(item);
+            unionSet.Add(item);
         }
 
         for (int i = 0; i < otherSet.Cardinality(); i++)
         {
             int otherElement = otherSet.GetElement(i);
-            resultSet.Add(otherElement);
+            unionSet.Add(otherElement);
         }
-        return resultSet;
+        return unionSet;
     }
 
     public override TDA Intersection(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize);
+        StaticTDASet intersectionSet = new StaticTDASet(maxSize);
         for (int i = 0; i < actualSize; i++)
         {
             if (otherSet.Contains(elements[i]))
             {
-                resultSet.Add(elements[i]);
+                intersectionSet.Add(elements[i]);
             }
         }
-        return resultSet;
+        return intersectionSet;
     }
 
     public override TDA Difference(TDA otherSet)
     {
-        StaticTDASet resultSet = new StaticTDASet(maxSize);
+        StaticTDASet differenceSet = new StaticTDASet(maxSize);
         for (int i = 0; i < actualSize; i++)
         {
             if (!otherSet.Contains(elements[i]))
             {
-                resultSet.Add(elements[i]);
+                differenceSet.Add(elements[i]);
             }
         }
-        return resultSet;
+        return differenceSet;
     }
 
     public override int GetElement(int index)
     {
         if (index < 0 || index >= actualSize)
-            Debug.Log("No está");
+            Debug.Log("No number");
         return elements[index];
     }
 }
