@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 
-public class StaticTDASet : TDA
+public class StaticTDASet<T> : TDA<T>
 {
-    private int[] elements;
+    private T[] elements;
     private int maxSize;
     private int actualSize;
 
     public StaticTDASet(int maxSize)
     {
         this.maxSize = maxSize;
-        elements = new int[this.maxSize];
+        elements = new T[this.maxSize];
         actualSize = 0;
     }
 
-    public override bool Add(int element)
+    public override bool Add(T element)
     {
         if (actualSize >= maxSize || Contains(element))
             return false;
@@ -22,11 +22,11 @@ public class StaticTDASet : TDA
         return true;
     }
 
-    public override bool Remove(int element)
+    public override bool Remove(T element)
     {
         for (int i = 0; i < actualSize; i++)
         {
-            if (elements[i] == element)
+            if (elements[i].Equals(element))
             {
                 for (int j = i; j < actualSize - 1; j++)
                 {
@@ -71,36 +71,36 @@ public class StaticTDASet : TDA
         return false;
     }
 
-    public override bool Contains(int element)
+    public override bool Contains(T element)
     {
         for (int i = 0; i < actualSize; i++)
         {
-            if (elements[i] == element)
+            if (elements[i].Equals(element))
                 return true;
         }
 
         return false;
     }
 
-    public override TDA Union(TDA otherSet)
+    public override TDA<T> Union(TDA<T> otherSet)
     {
-        StaticTDASet unionSet = new StaticTDASet(maxSize + otherSet.Cardinality());
-        foreach (int item in elements)
+        StaticTDASet<T> unionSet = new StaticTDASet<T>(maxSize + otherSet.Cardinality());
+        foreach (T item in elements)
         {
             unionSet.Add(item);
         }
 
         for (int i = 0; i < otherSet.Cardinality(); i++)
         {
-            int otherElement = otherSet.GetElement(i);
+            T otherElement = otherSet.GetElement(i);
             unionSet.Add(otherElement);
         }
         return unionSet;
     }
 
-    public override TDA Intersection(TDA otherSet)
+    public override TDA<T> Intersection(TDA<T> otherSet)
     {
-        StaticTDASet intersectionSet = new StaticTDASet(maxSize);
+        StaticTDASet<T> intersectionSet = new StaticTDASet<T>(maxSize);
         for (int i = 0; i < actualSize; i++)
         {
             if (otherSet.Contains(elements[i]))
@@ -111,9 +111,9 @@ public class StaticTDASet : TDA
         return intersectionSet;
     }
 
-    public override TDA Difference(TDA otherSet)
+    public override TDA<T> Difference(TDA<T> otherSet)
     {
-        StaticTDASet differenceSet = new StaticTDASet(maxSize);
+        StaticTDASet<T> differenceSet = new StaticTDASet<T>(maxSize);
         for (int i = 0; i < actualSize; i++)
         {
             if (!otherSet.Contains(elements[i]))
@@ -124,7 +124,7 @@ public class StaticTDASet : TDA
         return differenceSet;
     }
 
-    public override int GetElement(int index)
+    public override T GetElement(int index)
     {
         if (index < 0 || index >= actualSize)
             Debug.Log("No number");

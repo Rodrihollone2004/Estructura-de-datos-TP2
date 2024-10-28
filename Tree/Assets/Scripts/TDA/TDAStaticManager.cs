@@ -27,13 +27,13 @@ public class TDAStaticManager : MonoBehaviour
     [SerializeField] private TMP_Text sizeFirst;
     [SerializeField] private TMP_Text sizeSecond;
 
-    StaticTDASet firstStaticSet;
-    StaticTDASet secondStaticSet;
+    StaticTDASet<int> firstStaticSet;
+    StaticTDASet<int> secondStaticSet;
 
     private void Awake()
     {
-        firstStaticSet = new StaticTDASet(firstMaxSize);
-        secondStaticSet = new StaticTDASet(secondMaxSize);
+        firstStaticSet = new StaticTDASet<int>(firstMaxSize);
+        secondStaticSet = new StaticTDASet<int>(secondMaxSize);
     }
 
     void Start()
@@ -66,17 +66,17 @@ public class TDAStaticManager : MonoBehaviour
     {
         if (isUnion)
         {
-            TDA unionSet = firstStaticSet.Union(secondStaticSet);
+            TDA<int> unionSet = firstStaticSet.Union(secondStaticSet);
             unionText.text = $"Union Set: {unionSet.Show()}";
         }
         if (isIntersection)
         {
-            TDA intersectionSet = firstStaticSet.Intersection(secondStaticSet);
+            TDA<int> intersectionSet = firstStaticSet.Intersection(secondStaticSet);
             intersectionText.text = $"Intersection Set: {intersectionSet.Show()}";
         }
         if (isDifference)
         {
-            TDA differenceSet = firstStaticSet.Difference(secondStaticSet);
+            TDA<int> differenceSet = firstStaticSet.Difference(secondStaticSet);
             differenceText.text = $"Difference Set: {differenceSet.Show()}";
         }
     }

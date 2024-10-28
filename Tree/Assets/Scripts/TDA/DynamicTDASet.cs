@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DynamicTDASet : TDA
+public class DynamicTDASet<T> : TDA<T>
 {
-    List<int> list;
+    List<T> list;
 
     public DynamicTDASet() 
     { 
-        list = new List<int>();
+        list = new List<T>();
     }
 
-    public override bool Add(int element)
+    public override bool Add(T element)
     {
         if (Contains(element))
         {
@@ -21,11 +21,11 @@ public class DynamicTDASet : TDA
         return true;
     }
 
-    public override bool Remove(int element)
+    public override bool Remove(T element)
     {
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i] == element)
+            if (list[i].Equals(element))
             {
                 list.Remove(element); 
                 return true;
@@ -35,11 +35,11 @@ public class DynamicTDASet : TDA
         return false;
     }
 
-    public override bool Contains(int element)
+    public override bool Contains(T element)
     {
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i] == element)
+            if (list[i].Equals(element))
                 return true;
         }
 
@@ -75,25 +75,25 @@ public class DynamicTDASet : TDA
         return false;
     }
 
-    public override TDA Union(TDA otherSet)
+    public override TDA<T> Union(TDA<T> otherSet)
     {
-        DynamicTDASet unionSet = new DynamicTDASet();
-        foreach (int item in list)
+        DynamicTDASet<T> unionSet = new DynamicTDASet<T>();
+        foreach (T item in list)
         {
             unionSet.Add(item);
         }
 
         for (int i = 0; i < otherSet.Cardinality(); i++)
         {
-            int otherElement = otherSet.GetElement(i);
+            T otherElement = otherSet.GetElement(i);
             unionSet.Add(otherElement);
         }
         return unionSet;
     }
 
-    public override TDA Intersection(TDA otherSet)
+    public override TDA<T> Intersection(TDA<T> otherSet)
     {
-        DynamicTDASet intersectionSet = new DynamicTDASet();
+        DynamicTDASet<T> intersectionSet = new DynamicTDASet<T>();
         for (int i = 0; i < list.Count; i++)
         {
             if (otherSet.Contains(list[i]))
@@ -104,9 +104,9 @@ public class DynamicTDASet : TDA
         return intersectionSet;
     }
 
-    public override TDA Difference(TDA otherSet)
+    public override TDA<T> Difference(TDA<T> otherSet)
     {
-        DynamicTDASet differenceSet = new DynamicTDASet();
+        DynamicTDASet<T> differenceSet = new DynamicTDASet<T>();
         for (int i = 0; i < list.Count; i++)
         {
             if (!otherSet.Contains(list[i]))
@@ -114,9 +114,18 @@ public class DynamicTDASet : TDA
                 differenceSet.Add(list[i]);
             }
         }
+
+        for (int i = 0; i < otherSet.Cardinality(); i++)
+        {
+            T element = otherSet.GetElement(i); // Asegúrate de tener un método para acceder a los elementos en otherSet
+            if (!Contains(element))
+            {
+                differenceSet.Add(element);
+            }
+        }
         return differenceSet;
     }
-    public override int GetElement(int index)
+    public override T GetElement(int index)
     {
         if (index < 0)
             Debug.Log("No number");

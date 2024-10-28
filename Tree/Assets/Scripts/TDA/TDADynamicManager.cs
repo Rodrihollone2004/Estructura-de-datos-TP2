@@ -24,13 +24,13 @@ public class TDADynamicManager : MonoBehaviour
     [SerializeField] private TMP_Text sizeSecond;
 
 
-    DynamicTDASet firstDynamicSet;
-    DynamicTDASet secondDynamicSet;
+    DynamicTDASet<int> firstDynamicSet;
+    DynamicTDASet<int> secondDynamicSet;
 
     private void Awake()
     {
-        firstDynamicSet = new DynamicTDASet();
-        secondDynamicSet = new DynamicTDASet();
+        firstDynamicSet = new DynamicTDASet<int>();
+        secondDynamicSet = new DynamicTDASet<int>();
     }
 
     private void Start()
@@ -63,19 +63,19 @@ public class TDADynamicManager : MonoBehaviour
     {
         if (isUnion)
         {
-            TDA unionSet = firstDynamicSet.Union(secondDynamicSet);
+            TDA<int> unionSet = firstDynamicSet.Union(secondDynamicSet);
             unionText.text = $"Union Set: {unionSet.Show()}";
         }
 
         if (isIntersection)
         {
-            TDA intersectionSet = firstDynamicSet.Intersection(secondDynamicSet);
+            TDA<int> intersectionSet = firstDynamicSet.Intersection(secondDynamicSet);
             intersectionText.text = $"Intersection Set: {intersectionSet.Show()}";
         }
 
         if (isDifference)
         {
-            TDA differenceSet = firstDynamicSet.Difference(secondDynamicSet);
+            TDA<int> differenceSet = firstDynamicSet.Difference(secondDynamicSet);
             differenceText.text = $"Difference Set: {differenceSet.Show()}";
         }
     }
