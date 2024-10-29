@@ -30,7 +30,7 @@ public class StaticTDASet<T> : TDA<T>
             {
                 for (int j = i; j < actualSize - 1; j++)
                 {
-                    elements[j] = elements[j + 1];
+                    elements[j] = elements[j + 1]; 
                 }
                 actualSize--;
                 return true;
@@ -119,6 +119,15 @@ public class StaticTDASet<T> : TDA<T>
             if (!otherSet.Contains(elements[i]))
             {
                 differenceSet.Add(elements[i]);
+            }
+        }
+
+        for (int i = 0; i < otherSet.Cardinality(); i++)
+        {
+            T element = otherSet.GetElement(i);
+            if (!Contains(element))
+            {
+                differenceSet.Add(element);
             }
         }
         return differenceSet;

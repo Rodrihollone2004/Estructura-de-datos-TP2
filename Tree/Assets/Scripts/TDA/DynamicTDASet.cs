@@ -117,7 +117,7 @@ public class DynamicTDASet<T> : TDA<T>
 
         for (int i = 0; i < otherSet.Cardinality(); i++)
         {
-            T element = otherSet.GetElement(i); // Asegúrate de tener un método para acceder a los elementos en otherSet
+            T element = otherSet.GetElement(i); 
             if (!Contains(element))
             {
                 differenceSet.Add(element);

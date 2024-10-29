@@ -17,8 +17,6 @@ public class Tree
         }
     }
 
-    public int Height() => CalculateHeight(Root);
-
     protected virtual NodeABB InsertValue(int value, NodeABB node)
     {
         if (value < node.Value && node.Left == null)
@@ -60,7 +58,7 @@ public class Tree
     {
         if (aBB != null)
         {
-            Debug.Log("Array: " + aBB.Value.ToString());
+            Debug.Log("Pre Order: " + aBB.Value.ToString());
             PreOrder(aBB.Left);
             PreOrder(aBB.Right);
         }
@@ -71,7 +69,7 @@ public class Tree
         if (aBB != null)
         {
             InOrder(aBB.Left);
-            Debug.Log("Array: " + aBB.Value.ToString());
+            Debug.Log("In Order: " + aBB.Value.ToString());
             InOrder(aBB.Right);
         }
     }
@@ -82,7 +80,7 @@ public class Tree
         {
             PostOrder(aBB.Left);
             PostOrder(aBB.Right);
-            Debug.Log("Array: " + aBB.Value.ToString());
+            Debug.Log("Post Order: " + aBB.Value.ToString());
         }
     }
 
@@ -95,8 +93,6 @@ public class Tree
         while (nodesQueue.Count > 0)
         {
             node = nodesQueue.Dequeue();
-
-            Debug.Log(node.Value.ToString());
 
             if (node.Left != null) { nodesQueue.Enqueue(node.Left); }
 

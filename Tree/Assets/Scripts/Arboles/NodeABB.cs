@@ -8,8 +8,6 @@ public class NodeABB
 
     public NodeABB(int value)
     {
-        Debug.Log("Creación de: " + value);
-
         this.Value = value;
         this.Left = null;
         this.Right = null;
