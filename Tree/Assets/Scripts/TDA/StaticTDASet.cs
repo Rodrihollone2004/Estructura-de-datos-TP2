@@ -42,7 +42,7 @@ public class StaticTDASet<T> : TDA<T>
 
     public override string Show()
     {
-        if (!isEmpty())
+        if (!IsEmpty())
         {
             string textStatic = "";
             for (int i = 0; i < actualSize; i++)
@@ -61,7 +61,7 @@ public class StaticTDASet<T> : TDA<T>
         return actualSize;
     }
 
-    public override bool isEmpty()
+    public override bool IsEmpty()
     {
         if (elements.Length == 0)
         {

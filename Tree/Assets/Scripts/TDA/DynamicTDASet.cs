@@ -53,7 +53,7 @@ public class DynamicTDASet<T> : TDA<T>
 
     public override string Show()
     {
-        if (!isEmpty())
+        if (!IsEmpty())
         {
             string textDynamic = "";
             for (int i = 0; i < list.Count; i++)
@@ -67,7 +67,7 @@ public class DynamicTDASet<T> : TDA<T>
         return "";
     }
 
-    public override bool isEmpty()
+    public override bool IsEmpty()
     {
         if (list.Count == 0)
             return true;

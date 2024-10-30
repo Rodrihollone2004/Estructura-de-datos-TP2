@@ -40,6 +40,7 @@ public class Tree
         return node;
     }
 
+    public int Height() => CalculateHeight(Root);
 
     protected int CalculateHeight(NodeABB node)
     {

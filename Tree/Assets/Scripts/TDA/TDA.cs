@@ -5,7 +5,7 @@ public abstract class TDA<T>
     public abstract bool Contains(T element); //Verifica si el conjun to contiene un elemento
     public abstract string Show(); //Muestra todos los elementos del conjunto
     public abstract int Cardinality(); //Devuelve la cardinalidad del conjunto (tamaño actual)
-    public abstract bool isEmpty(); //Verifica si el conjunto está vacío
+    public abstract bool IsEmpty(); //Verifica si el conjunto está vacío
     public abstract T GetElement(int index); //Para acceder al elemento dentro del otro nodo //Este lo agregué yo
     public abstract TDA<T> Union(TDA<T> otherSet); //Realiza la unión de 2 conjuntos 
     public abstract TDA<T> Intersection(TDA<T> otherSet); //Realiza la intersección de 2 conjuntos
