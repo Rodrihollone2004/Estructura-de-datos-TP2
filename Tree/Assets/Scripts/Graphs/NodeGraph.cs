@@ -1,5 +1,5 @@
-﻿class NodeGraph
-{
+﻿public class NodeGraph
+{ 
     public string name = "";
     public int weight = 0;
 

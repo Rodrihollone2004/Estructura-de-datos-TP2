@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class TDADynamicGraph<T> : TDA<T>
 {
@@ -25,6 +26,12 @@ public class TDADynamicGraph<T> : TDA<T>
         if (!Contains(from) || !Contains(to))
             return false;
 
+        foreach ((T, int) connection in nodes[from])
+        {
+            if (connection.Item1.Equals(to))
+                return false;
+        }
+
         nodes[from].Add((to, weight));
         return true;
     }
@@ -40,6 +47,7 @@ public class TDADynamicGraph<T> : TDA<T>
         if (nodes.ContainsKey(element))
         {
             nodes.Remove(element);
+
             size--;
             return true;
         }
@@ -47,12 +55,33 @@ public class TDADynamicGraph<T> : TDA<T>
         return false;
     }
 
+    public override T GetElement(int index)
+    {
+        if (index < 0 || index >= size)
+            throw new IndexOutOfRangeException("Índice fuera de rango en GetElement.");
+
+        foreach (T node in nodes.Keys)
+        {
+            if (index == 0)
+                return node;
+            index--;
+        }
+
+        throw new IndexOutOfRangeException("No se encontró un elemento para el índice dado.");
+    }
+
+    public List<(T, int)> GetConnectionsFromNode(T from)
+    {
+        if (!nodes.ContainsKey(from))
+            return null;
+
+        return nodes[from];
+    }
+
     public override string Show()
     {
         throw new System.NotImplementedException();
     }
-
-
 
     public override TDA<T> Union(TDA<T> otherSet)
     {
@@ -63,10 +92,6 @@ public class TDADynamicGraph<T> : TDA<T>
         throw new System.NotImplementedException();
     }
     public override TDA<T> Difference(TDA<T> otherSet)
-    {
-        throw new System.NotImplementedException();
-    }
-    public override T GetElement(int index)
     {
         throw new System.NotImplementedException();
     }
