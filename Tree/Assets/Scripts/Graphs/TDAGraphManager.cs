@@ -5,7 +5,7 @@ public class TDAGraphManager : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private GameObject player;
-    [SerializeField] private bool isMoving;
+    [SerializeField] private int totalWeight;
 
     [Header("Lines")]
     [SerializeField] private Material lineMaterial;
@@ -13,17 +13,15 @@ public class TDAGraphManager : MonoBehaviour
     [SerializeField] private Transform content;
 
     [Header("Lists Nodos y conexiones")]
-    [SerializeField] private List<NodeGraphVisual> visualNodesGraph;
-    [SerializeField] private List<ConnectionGraphVisual> visualConecNodesGraph;
-    private NodeGraph startNode;
+    private List<NodeGraphVisual> visualNodesGraph;
 
+    private NodeGraph startNode;
     private TDADynamicGraph<NodeGraph> dynamicNodesGraph;
 
     private void Awake()
     {
         dynamicNodesGraph = new TDADynamicGraph<NodeGraph>();
         visualNodesGraph = new List<NodeGraphVisual>();
-        visualConecNodesGraph = new List<ConnectionGraphVisual>();
     }
 
     private void Start()
@@ -43,36 +41,91 @@ public class TDAGraphManager : MonoBehaviour
         startNode = dynamicNodesGraph.GetElement(0);
         player.transform.position = visualNodesGraph[startNode.weight].transform.position;
 
-        //NodeGraph removeNode = dynamicNodesGraph.GetElement(1);
-        //RemoveNode(removeNode);
-
         ShowConnections();
 
         Debug.Log(dynamicNodesGraph.Cardinality());
     }
 
-    private void Update()
+    public void OnNodeClicked(NodeGraphVisual clickedNode)
     {
-        if (isMoving)
+        NodeGraph destinationNode = dynamicNodesGraph.GetElement(clickedNode.weight);
+
+        List<NodeGraph> path = FindShortestPath(startNode, destinationNode);
+
+        if (path != null)
         {
-            isMoving = false;
-            List<(NodeGraph, int)> connections = dynamicNodesGraph.GetConnectionsFromNode(startNode);
+            startNode = destinationNode;
+            player.transform.position = visualNodesGraph[destinationNode.weight].transform.position;
 
-            if (connections != null && connections.Count > 0)
+            for (int i = 0; i < path.Count - 1; i++)
             {
-                (NodeGraph, int) tempConnection = connections[0];
-                foreach ((NodeGraph, int) connection in connections)
-                {
-                    if (connection.Item2 < tempConnection.Item2)
-                    {
-                        tempConnection = connection;
-                    }
-                }
-
-                startNode = tempConnection.Item1;
-                player.transform.position = visualNodesGraph[startNode.weight].transform.position;
+                totalWeight += dynamicNodesGraph.GetWeight(path[i], path[i + 1]);
             }
         }
+        else
+        {
+            Debug.Log("No hay camino hacia " + clickedNode.nodeName);
+        }
+    }
+
+    public List<NodeGraph> FindShortestPath(NodeGraph start, NodeGraph target)
+    {
+        List<(NodeGraph nodeGraph, int cost)> priorityQueue = new List<(NodeGraph, int)>();
+        Dictionary<NodeGraph, int> distances = new Dictionary<NodeGraph, int>();
+        Dictionary<NodeGraph, NodeGraph> previousNodes = new Dictionary<NodeGraph, NodeGraph>();
+
+        foreach (NodeGraph node in dynamicNodesGraph.GetAllNodes())
+        {
+            distances[node] = int.MaxValue;
+            previousNodes[node] = null;
+        }
+
+        distances[start] = 0;
+        priorityQueue.Add((start, 0));
+
+        while (priorityQueue.Count > 0)
+        {
+            priorityQueue.Sort((a, b) => a.cost.CompareTo(b.cost));
+            NodeGraph currentNode = priorityQueue[0].nodeGraph;
+            priorityQueue.RemoveAt(0);
+
+            if (currentNode.Equals(target))
+            {
+                return ConstructPath(previousNodes, target);
+            }
+
+            List<(NodeGraph, int)> connections = dynamicNodesGraph.GetConnectionsFromNode(currentNode);
+            foreach ((NodeGraph, int) connection in connections)
+            {
+                NodeGraph neighbor = connection.Item1;
+                int weight = connection.Item2;
+                int newDistance = distances[currentNode] + weight;
+
+                if (newDistance < distances[neighbor])
+                {
+                    distances[neighbor] = newDistance;
+                    previousNodes[neighbor] = currentNode;
+
+                    if (!priorityQueue.Exists(n => n.nodeGraph.Equals(neighbor)))
+                    {
+                        priorityQueue.Add((neighbor, newDistance));
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private List<NodeGraph> ConstructPath(Dictionary<NodeGraph, NodeGraph> previousNodes, NodeGraph target)
+    {
+        List<NodeGraph> path = new List<NodeGraph>();
+        for (NodeGraph at = target; at != null; at = previousNodes[at])
+        {
+            path.Add(at);
+        }
+        path.Reverse();
+        return path;
     }
 
     private void ShowConnections()
@@ -144,7 +197,6 @@ public class TDAGraphManager : MonoBehaviour
             ConnectionGraphVisual connection = lineObj.AddComponent<ConnectionGraphVisual>();
             connection.conectName = $"{fromVisual.nodeName} - {toVisual.nodeName}";
             connection.weight = weight;
-            visualConecNodesGraph.Add(connection);
         }
     }
 }

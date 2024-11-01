@@ -51,14 +51,14 @@ public class TDADynamicGraph<T> : TDA<T>
             size--;
             return true;
         }
-        
+
         return false;
     }
 
     public override T GetElement(int index)
     {
         if (index < 0 || index >= size)
-            throw new IndexOutOfRangeException("Índice fuera de rango en GetElement.");
+            throw new IndexOutOfRangeException("Se fue del rango");
 
         foreach (T node in nodes.Keys)
         {
@@ -67,7 +67,7 @@ public class TDADynamicGraph<T> : TDA<T>
             index--;
         }
 
-        throw new IndexOutOfRangeException("No se encontró un elemento para el índice dado.");
+        throw new IndexOutOfRangeException("No hay elemento con ese índice");
     }
 
     public List<(T, int)> GetConnectionsFromNode(T from)
@@ -76,6 +76,27 @@ public class TDADynamicGraph<T> : TDA<T>
             return null;
 
         return nodes[from];
+    }
+
+    public List<T> GetAllNodes()
+    {
+        return new List<T>(nodes.Keys);
+    }
+
+    public int GetWeight(T from, T to)
+    {
+        if (!Contains(from) || !Contains(to))
+            return 0;
+
+        foreach ((T, int) connection in nodes[from])
+        {
+            if (connection.Item1.Equals(to))
+            {
+                return connection.Item2;
+            }
+        }
+
+        return 0;
     }
 
     public override string Show()
