@@ -5,6 +5,7 @@ public class TDADynamicGraph<T> : TDA<T>
 {
     Dictionary<T, List<(T, int)>> nodes;
     int size = 0;
+
     public TDADynamicGraph()
     {
         nodes = new Dictionary<T, List<(T, int)>>();
@@ -90,7 +91,7 @@ public class TDADynamicGraph<T> : TDA<T>
 
         foreach ((T, int) connection in nodes[from])
         {
-            if (connection.Item1.Equals(to))
+            if (connection.Item1.Equals(to)) 
             {
                 return connection.Item2;
             }

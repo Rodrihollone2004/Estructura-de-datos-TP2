@@ -70,24 +70,24 @@ public class TDAGraphManager : MonoBehaviour
 
     public List<NodeGraph> FindShortestPath(NodeGraph start, NodeGraph target)
     {
-        List<(NodeGraph nodeGraph, int cost)> priorityQueue = new List<(NodeGraph, int)>();
-        Dictionary<NodeGraph, int> distances = new Dictionary<NodeGraph, int>();
+        List<(NodeGraph nodeGraph, int cost)> priorityList = new List<(NodeGraph, int)>();
+        Dictionary<NodeGraph, int> travelWeight = new Dictionary<NodeGraph, int>();
         Dictionary<NodeGraph, NodeGraph> previousNodes = new Dictionary<NodeGraph, NodeGraph>();
 
         foreach (NodeGraph node in dynamicNodesGraph.GetAllNodes())
         {
-            distances[node] = int.MaxValue;
+            travelWeight[node] = int.MaxValue;
             previousNodes[node] = null;
         }
 
-        distances[start] = 0;
-        priorityQueue.Add((start, 0));
+        travelWeight[start] = 0;
+        priorityList.Add((start, 0));
 
-        while (priorityQueue.Count > 0)
+        while (priorityList.Count > 0)
         {
-            priorityQueue.Sort((a, b) => a.cost.CompareTo(b.cost));
-            NodeGraph currentNode = priorityQueue[0].nodeGraph;
-            priorityQueue.RemoveAt(0);
+            priorityList.Sort((a, b) => a.cost.CompareTo(b.cost));
+            NodeGraph currentNode = priorityList[0].nodeGraph;
+            priorityList.RemoveAt(0);
 
             if (currentNode.Equals(target))
             {
@@ -95,20 +95,21 @@ public class TDAGraphManager : MonoBehaviour
             }
 
             List<(NodeGraph, int)> connections = dynamicNodesGraph.GetConnectionsFromNode(currentNode);
+
             foreach ((NodeGraph, int) connection in connections)
             {
                 NodeGraph neighbor = connection.Item1;
                 int weight = connection.Item2;
-                int newDistance = distances[currentNode] + weight;
+                int lineWeight = travelWeight[currentNode] + weight;
 
-                if (newDistance < distances[neighbor])
+                if (lineWeight < travelWeight[neighbor])
                 {
-                    distances[neighbor] = newDistance;
+                    travelWeight[neighbor] = lineWeight;
                     previousNodes[neighbor] = currentNode;
 
-                    if (!priorityQueue.Exists(n => n.nodeGraph.Equals(neighbor)))
+                    if (!priorityList.Exists(neighborNode => neighborNode.nodeGraph.Equals(neighbor)))
                     {
-                        priorityQueue.Add((neighbor, newDistance));
+                        priorityList.Add((neighbor, lineWeight));
                     }
                 }
             }
@@ -116,17 +117,17 @@ public class TDAGraphManager : MonoBehaviour
 
         return null;
     }
-
     private List<NodeGraph> ConstructPath(Dictionary<NodeGraph, NodeGraph> previousNodes, NodeGraph target)
     {
         List<NodeGraph> path = new List<NodeGraph>();
-        for (NodeGraph at = target; at != null; at = previousNodes[at])
+        for (NodeGraph dest = target; dest != null; dest = previousNodes[dest])
         {
-            path.Add(at);
+            path.Add(dest);
         }
         path.Reverse();
         return path;
     }
+
 
     private void ShowConnections()
     {
@@ -161,7 +162,6 @@ public class TDAGraphManager : MonoBehaviour
             CreateConnection(visualNodesGraph[10], visualNodesGraph[11], 4);
         }
     }
-
     private void CreateConnection(NodeGraphVisual fromVisual, NodeGraphVisual toVisual, int weight)
     {
         NodeGraph fromNode = dynamicNodesGraph.GetElement(visualNodesGraph.IndexOf(fromVisual));
