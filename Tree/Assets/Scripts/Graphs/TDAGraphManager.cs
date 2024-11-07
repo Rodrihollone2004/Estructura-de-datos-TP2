@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class TDAGraphManager : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private GameObject player;
+    [SerializeField] private TMP_Text weightText;
     [SerializeField] private int totalWeight;
 
     [Header("Lines")]
@@ -60,6 +62,7 @@ public class TDAGraphManager : MonoBehaviour
             for (int i = 0; i < path.Count - 1; i++)
             {
                 totalWeight += dynamicNodesGraph.GetWeight(path[i], path[i + 1]);
+                weightText.text = "Travel Weight: " + totalWeight;
             }
         }
         else
@@ -68,6 +71,7 @@ public class TDAGraphManager : MonoBehaviour
         }
     }
 
+    //Algoritmo Dijkstra
     public List<NodeGraph> FindShortestPath(NodeGraph start, NodeGraph target)
     {
         List<(NodeGraph nodeGraph, int cost)> priorityList = new List<(NodeGraph, int)>();
@@ -127,7 +131,6 @@ public class TDAGraphManager : MonoBehaviour
         path.Reverse();
         return path;
     }
-
 
     private void ShowConnections()
     {

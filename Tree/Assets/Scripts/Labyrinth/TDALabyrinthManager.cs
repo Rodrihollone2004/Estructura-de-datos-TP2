@@ -6,7 +6,7 @@ public class TDALabyrinthManager : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private GameObject player;
-    [SerializeField] private int totalWeight;
+    [SerializeField] private float delayPlayerTravel;
 
     [Header("Lines")]
     [SerializeField] private Material lineMaterial;
@@ -14,25 +14,25 @@ public class TDALabyrinthManager : MonoBehaviour
     [SerializeField] private Transform content;
 
     [Header("Lists Nodos y conexiones")]
-    [SerializeField] private List<NodeLabyrinthVisual> visualNodesLabyrinth;
+    [SerializeField] private List<NodeGraphVisual> visualNodesLabyrinth;
 
-    [SerializeField] private NodeLabyrinthVisual startNode;
-    [SerializeField] private NodeLabyrinthVisual exitNode;
+    [SerializeField] private NodeGraphVisual startNode;
+    [SerializeField] private NodeGraphVisual exitNode;
 
     [SerializeField] bool isExit;
 
-    private NodeLabyrinth currentNode;
-    private TDADynamicLabyrinth<NodeLabyrinth> dynamicNodesLabyrinth;
+    private NodeGraph currentNode;
+    private TDADynamicLabyrinth<NodeGraph> dynamicNodesLabyrinth;
 
     private void Awake()
     {
-        dynamicNodesLabyrinth = new TDADynamicLabyrinth<NodeLabyrinth>();
-        visualNodesLabyrinth = new List<NodeLabyrinthVisual>();
+        dynamicNodesLabyrinth = new TDADynamicLabyrinth<NodeGraph>();
+        visualNodesLabyrinth = new List<NodeGraphVisual>();
     }
 
     private void Start()
     {
-        NodeLabyrinthVisual[] nodes = GetComponentsInChildren<NodeLabyrinthVisual>();
+        NodeGraphVisual[] nodes = GetComponentsInChildren<NodeGraphVisual>();
         for (int i = 0; i < nodes.Length; i++)
         {
             visualNodesLabyrinth.Add(nodes[i]);
@@ -40,7 +40,7 @@ public class TDALabyrinthManager : MonoBehaviour
 
         for (int i = 0; i < visualNodesLabyrinth.Count; i++)
         {
-            NodeLabyrinth node = new NodeLabyrinth(visualNodesLabyrinth[i].nodeName, visualNodesLabyrinth[i].weight);
+            NodeGraph node = new NodeGraph(visualNodesLabyrinth[i].nodeName, visualNodesLabyrinth[i].weight);
             dynamicNodesLabyrinth.Add(node);
         }
 
@@ -49,29 +49,27 @@ public class TDALabyrinthManager : MonoBehaviour
 
         ShowConnections();
 
-        SearchExitPath(exitNode);
-
         Debug.Log(dynamicNodesLabyrinth.Cardinality());
     }
 
-    //private void Update()
-    //{
-    //    if (isExit)
-    //    {
-    //        isExit = false;
-    //        SearchExitPath(exitNode);
-    //    }
-    //}
-
-    public void SearchExitPath(NodeLabyrinthVisual ExitNode)
+    private void Update()
     {
-        NodeLabyrinth destinationNode = dynamicNodesLabyrinth.GetElement(ExitNode.weight);
+        if (isExit)
+        {
+            isExit = false;
+            SearchExitPath(exitNode);
+        }
+    }
 
-        List<NodeLabyrinth> path = FindPathToExit(currentNode, destinationNode);
+    public void SearchExitPath(NodeGraphVisual ExitNode)
+    {
+        NodeGraph destinationNode = dynamicNodesLabyrinth.GetElement(ExitNode.weight);
+
+        List<NodeGraph> path = FindPathToExit(currentNode, destinationNode);
 
         if (path != null)
         {
-            foreach (NodeLabyrinth node in path)
+            foreach (NodeGraph node in path)
             {
                 Debug.Log(node.name);  
             }
@@ -84,26 +82,17 @@ public class TDALabyrinthManager : MonoBehaviour
         }
     }
 
-    private IEnumerator MovePlayerAlongPath(List<NodeLabyrinth> path)
+    public void ActivatePlayer()
     {
-        foreach (NodeLabyrinth node in path)
-        {
-            Debug.Log("Nodo: " + node.name);  
-            yield return new WaitForSeconds(2.5f);
-
-            player.transform.position = visualNodesLabyrinth[node.weight].transform.position;
-        }
-
-        currentNode = path[path.Count - 1];
-
-        Debug.Log("Listo");
+        isExit = true;
     }
 
-    public List<NodeLabyrinth> FindPathToExit(NodeLabyrinth start, NodeLabyrinth target)
+
+    public List<NodeGraph> FindPathToExit(NodeGraph start, NodeGraph target)
     {
-        Queue<NodeLabyrinth> queue = new Queue<NodeLabyrinth>();  
-        Dictionary<NodeLabyrinth, NodeLabyrinth> previousNodes = new Dictionary<NodeLabyrinth, NodeLabyrinth>();
-        List<NodeLabyrinth> visitedNodes = new List<NodeLabyrinth>();  
+        Queue<NodeGraph> queue = new Queue<NodeGraph>();  
+        Dictionary<NodeGraph, NodeGraph> previousNodes = new Dictionary<NodeGraph, NodeGraph>();
+        List<NodeGraph> visitedNodes = new List<NodeGraph>();  
 
         queue.Enqueue(start);
         visitedNodes.Add(start);
@@ -111,16 +100,16 @@ public class TDALabyrinthManager : MonoBehaviour
 
         while (queue.Count > 0)
         {
-            NodeLabyrinth currentNode = queue.Dequeue();
+            NodeGraph currentNode = queue.Dequeue();
 
             if (currentNode.Equals(target))
             {
                 return ConstructPath(previousNodes, target);
             }
 
-            List<(NodeLabyrinth, int)> connections = dynamicNodesLabyrinth.GetConnectionsFromNode(currentNode);
+            List<(NodeGraph, int)> connections = dynamicNodesLabyrinth.GetConnectionsFromNode(currentNode);
 
-            foreach ((NodeLabyrinth, int) connection in connections)
+            foreach ((NodeGraph, int) connection in connections)
             {
                 if (!visitedNodes.Contains(connection.Item1))
                 {
@@ -133,10 +122,26 @@ public class TDALabyrinthManager : MonoBehaviour
 
         return null;
     }
-    private List<NodeLabyrinth> ConstructPath(Dictionary<NodeLabyrinth, NodeLabyrinth> previousNodes, NodeLabyrinth target)
+
+    private IEnumerator MovePlayerAlongPath(List<NodeGraph> path)
     {
-        List<NodeLabyrinth> path = new List<NodeLabyrinth>();
-        NodeLabyrinth current = target;
+        foreach (NodeGraph node in path)
+        {
+            Debug.Log("Nodo: " + node.name);  
+            yield return new WaitForSeconds(delayPlayerTravel);
+
+            player.transform.position = visualNodesLabyrinth[node.weight].transform.position;
+        }
+
+        currentNode = path[path.Count - 1];
+
+        Debug.Log("Listo");
+    }
+
+    private List<NodeGraph> ConstructPath(Dictionary<NodeGraph, NodeGraph> previousNodes, NodeGraph target)
+    {
+        List<NodeGraph> path = new List<NodeGraph>();
+        NodeGraph current = target;
 
         while (current != null)
         {
@@ -148,7 +153,6 @@ public class TDALabyrinthManager : MonoBehaviour
 
         return path; 
     }
-
 
     private void ShowConnections()
     {
@@ -243,10 +247,10 @@ public class TDALabyrinthManager : MonoBehaviour
             CreateConnection(visualNodesLabyrinth[22], visualNodesLabyrinth[28], 1);
         }
     }
-    private void CreateConnection(NodeLabyrinthVisual fromVisual, NodeLabyrinthVisual toVisual, int weight)
+    private void CreateConnection(NodeGraphVisual fromVisual, NodeGraphVisual toVisual, int weight)
     {
-        NodeLabyrinth fromNode = dynamicNodesLabyrinth.GetElement(visualNodesLabyrinth.IndexOf(fromVisual));
-        NodeLabyrinth toNode = dynamicNodesLabyrinth.GetElement(visualNodesLabyrinth.IndexOf(toVisual));
+        NodeGraph fromNode = dynamicNodesLabyrinth.GetElement(visualNodesLabyrinth.IndexOf(fromVisual));
+        NodeGraph toNode = dynamicNodesLabyrinth.GetElement(visualNodesLabyrinth.IndexOf(toVisual));
 
         if (dynamicNodesLabyrinth.Contains(fromNode)
             && dynamicNodesLabyrinth.Contains(toNode)

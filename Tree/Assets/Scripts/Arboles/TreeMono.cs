@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class TreeMono : MonoBehaviour
 {
-    private int[] myArray = { 2, 1, 8, 0, 5, 9, 4, 3, 100, 101, 102, 103, 5, 5, 5 };
+    [SerializeField] private int[] myArray = { 2, 1, 8, 0, 5, 9, 4, 3, 100, 101, 102, 103, 5, 5, 5 };
 
     private ShowNodes showNodes;
 
-    private Tree tree; //Árbol ABB
+    private ABBTree treeABB; //Árbol ABB
     private AVLTree treeAVL; //Árbol AVL
 
     private Vector3 startPosNodes;
@@ -17,12 +17,14 @@ public class TreeMono : MonoBehaviour
     [SerializeField] private float offSetY;
     [SerializeField] private float offSetX;
 
+    [Header("Actualizaciones en play")]
+    [SerializeField] private TMP_Text actualHeight;
     [SerializeField] private bool push = false;
     [SerializeField] private int num = 0;
 
     private void Awake()
     {
-        tree = new Tree();
+        treeABB = new ABBTree();
         treeAVL = new AVLTree();
 
         showNodes = FindObjectOfType<ShowNodes>();
@@ -31,19 +33,19 @@ public class TreeMono : MonoBehaviour
 
     private void Start()
     {
-        //for (int i = 0; i < myArray.Length; i++)
-        //{
-        //    tree.InsertValue(myArray[i]); // // Valores del Árbol ABB (se muestra el árbol ordenado sin balancearse ni nada) --Ejercicio 1--
-        //}
-        //showNodes.ShowOrderNodes(tree.Root, startPosNodes, offSetX, offSetY, content); // Mostrar los nodos del --Ejercicio 1--
-
         for (int i = 0; i < myArray.Length; i++)
         {
-            treeAVL.Insert(myArray[i]); // Valores del Árbol AVL (se balancean los nodos según el FE) --Ejercicio 2--
+            treeABB.InsertValue(myArray[i]); // // Valores del Árbol ABB (se muestra el árbol ordenado sin balancearse ni nada) --Ejercicio 1--
         }
+        showNodes.ShowOrderNodes(treeABB.Root, startPosNodes, offSetX, offSetY, content); // Mostrar los nodos del --Ejercicio 1--
+
+        //for (int i = 0; i < myArray.Length; i++)
+        //{
+        //    treeAVL.Insert(myArray[i]); // Valores del Árbol AVL (se balancean los nodos según el FE) --Ejercicio 2--
+        //}
         Print();
 
-        Debug.Log("Height: " + tree.Height()); // Sirve para ambos ejercicios, calcula la altura máxima
+        actualHeight.text = "Height: " + treeABB.Height(); // Sirve para ambos ejercicios, calcula la altura máxima
     }
 
 
@@ -52,18 +54,19 @@ public class TreeMono : MonoBehaviour
         if (push)
         {
             push = false;
-            treeAVL.InsertValue(num);
+            treeABB.InsertValue(num);
             Print();
         }
     }
 
-    void Print()
+    private void Print()
     {
         Transform[] childs = GetComponentsInChildren<Transform>();
         for (int i = 0; i < childs.Length; i++)
             if (childs[i] != transform)
                 Destroy(childs[i].gameObject);
 
-        showNodes.ShowOrderNodes(treeAVL.Root, startPosNodes, offSetX, offSetY, content);
+        showNodes.ShowOrderNodes(treeABB.Root, startPosNodes, offSetX, offSetY, content);
+        actualHeight.text = "Height: " + treeABB.Height();
     }
 }

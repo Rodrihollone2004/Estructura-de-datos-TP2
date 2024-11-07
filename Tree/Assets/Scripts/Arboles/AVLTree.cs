@@ -1,44 +1,10 @@
 ﻿using UnityEngine;
 
-public class AVLTree : Tree
+public class AVLTree : ABBTree
 {
     public void Insert(int value)
     {
         Root = InsertValue(value, Root);
-    }
-
-    protected override NodeABB InsertValue(int value, NodeABB node)
-    {
-        if (node == null)
-        {
-            return new NodeABB(value);
-        }
-        if (value < node.Value)
-        {
-            node.Left = InsertValue(value, node.Left);
-        }
-        else if (value > node.Value)
-        {
-            node.Right = InsertValue(value, node.Right);
-        }
-
-        CalculateHeight(node);
-        
-        int fe = GetBalanceFactor(node);
-
-        if (fe > 1 && value < (node.Left?.Value ?? 0))
-            return RightRotate(node);
-
-        if (fe < -1 && value > (node.Right?.Value ?? 0))
-            return LeftRotate(node);
-
-        if (fe > 1 && value > (node.Left?.Value ?? 0))
-            return DoubleRightRotate(node);
-
-        if (fe < -1 && value < (node.Right?.Value ?? 0))
-            return DoubleLeftRotate(node);
-
-        return node;
     }
 
     public int GetBalanceFactor(NodeABB node)
@@ -95,4 +61,37 @@ public class AVLTree : Tree
         return RightRotate(node);
     }
 
+    protected override NodeABB InsertValue(int value, NodeABB node)
+    {
+        if (node == null)
+        {
+            return new NodeABB(value);
+        }
+        if (value < node.Value)
+        {
+            node.Left = InsertValue(value, node.Left);
+        }
+        else if (value > node.Value)
+        {
+            node.Right = InsertValue(value, node.Right);
+        }
+
+        CalculateHeight(node);
+        
+        int fe = GetBalanceFactor(node);
+
+        if (fe > 1 && value < (node.Left?.Value ?? 0))
+            return RightRotate(node);
+
+        if (fe < -1 && value > (node.Right?.Value ?? 0))
+            return LeftRotate(node);
+
+        if (fe > 1 && value > (node.Left?.Value ?? 0))
+            return DoubleRightRotate(node);
+
+        if (fe < -1 && value < (node.Right?.Value ?? 0))
+            return DoubleLeftRotate(node);
+
+        return node;
+    }
 }

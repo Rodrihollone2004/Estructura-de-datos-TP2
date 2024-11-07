@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree
+public class ABBTree
 {
     public NodeABB Root { get; set; }
 
@@ -17,43 +17,7 @@ public class Tree
         }
     }
 
-    protected virtual NodeABB InsertValue(int value, NodeABB node)
-    {
-        if (value < node.Value && node.Left == null)
-        {
-            node.Left = new NodeABB(value);
-        }
-        else if (value < node.Value && node.Left != null)
-        {
-            return InsertValue(value, node.Left);
-        }
-
-        if (value > node.Value && node.Right == null)
-        {
-            node.Right = new NodeABB(value);
-        }
-        else if (value > node.Value && node.Right != null)
-        {
-            return InsertValue(value, node.Right);
-        }
-
-        return node;
-    }
-
     public int Height() => CalculateHeight(Root);
-
-    protected int CalculateHeight(NodeABB node)
-    {
-        if (node == null)
-        {
-            return 0;
-        }
-        else
-        {
-            node.Height = 1 + Mathf.Max(CalculateHeight(node.Left), CalculateHeight(node.Right));
-            return node.Height;
-        }
-    }
 
     public void PreOrder(NodeABB aBB)
     {
@@ -98,6 +62,42 @@ public class Tree
             if (node.Left != null) { nodesQueue.Enqueue(node.Left); }
 
             if (node.Right != null) { nodesQueue.Enqueue(node.Right); }
+        }
+    }
+
+    protected virtual NodeABB InsertValue(int value, NodeABB node)
+    {
+        if (value < node.Value && node.Left == null)
+        {
+            node.Left = new NodeABB(value);
+        }
+        else if (value < node.Value && node.Left != null)
+        {
+            return InsertValue(value, node.Left);
+        }
+
+        if (value > node.Value && node.Right == null)
+        {
+            node.Right = new NodeABB(value);
+        }
+        else if (value > node.Value && node.Right != null)
+        {
+            return InsertValue(value, node.Right);
+        }
+
+        return node;
+    }
+
+    protected int CalculateHeight(NodeABB node)
+    {
+        if (node == null)
+        {
+            return 0;
+        }
+        else
+        {
+            node.Height = 1 + Mathf.Max(CalculateHeight(node.Left), CalculateHeight(node.Right));
+            return node.Height;
         }
     }
 }
