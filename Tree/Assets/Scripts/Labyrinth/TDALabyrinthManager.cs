@@ -156,97 +156,35 @@ public class TDALabyrinthManager : MonoBehaviour
 
     private void ShowConnections()
     {
-        if (dynamicNodesLabyrinth.Cardinality() > 0)
+        float maxDistance = 2f; 
+
+        for (int i = 0; i < visualNodesLabyrinth.Count; i++)
         {
-            CreateConnection(visualNodesLabyrinth[0], visualNodesLabyrinth[6], 1);
-            CreateConnection(visualNodesLabyrinth[6], visualNodesLabyrinth[0], 1);
+            NodeGraphVisual fromVisual = visualNodesLabyrinth[i];
+            Vector3 fromPosition = fromVisual.transform.position;
 
-            CreateConnection(visualNodesLabyrinth[0], visualNodesLabyrinth[1], 1);
-            CreateConnection(visualNodesLabyrinth[1], visualNodesLabyrinth[0], 1);
+            Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right };
 
+            foreach (Vector3 direction in directions)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(fromPosition, direction, out hit, maxDistance))
+                {
+                    NodeGraphVisual toVisual = hit.collider.GetComponent<NodeGraphVisual>();
 
-            CreateConnection(visualNodesLabyrinth[1], visualNodesLabyrinth[7], 1);
-            CreateConnection(visualNodesLabyrinth[7], visualNodesLabyrinth[1], 1);
+                    if (toVisual != null && !hit.collider.CompareTag("Wall"))
+                    {
+                        int weight = 1; 
+                        CreateConnection(fromVisual, toVisual, weight);
 
-            CreateConnection(visualNodesLabyrinth[2], visualNodesLabyrinth[3], 1);
-            CreateConnection(visualNodesLabyrinth[3], visualNodesLabyrinth[2], 1);
-
-            CreateConnection(visualNodesLabyrinth[2], visualNodesLabyrinth[8], 1);
-            CreateConnection(visualNodesLabyrinth[8], visualNodesLabyrinth[2], 1);
-
-            CreateConnection(visualNodesLabyrinth[3], visualNodesLabyrinth[4], 1);
-            CreateConnection(visualNodesLabyrinth[4], visualNodesLabyrinth[3], 1);
-
-            CreateConnection(visualNodesLabyrinth[7], visualNodesLabyrinth[8], 1);
-            CreateConnection(visualNodesLabyrinth[8], visualNodesLabyrinth[7], 1);
-
-            CreateConnection(visualNodesLabyrinth[8], visualNodesLabyrinth[9], 1);
-            CreateConnection(visualNodesLabyrinth[9], visualNodesLabyrinth[8], 1);
-
-            CreateConnection(visualNodesLabyrinth[9], visualNodesLabyrinth[10], 1);
-            CreateConnection(visualNodesLabyrinth[10], visualNodesLabyrinth[9], 1);
-
-            CreateConnection(visualNodesLabyrinth[9], visualNodesLabyrinth[15], 1);
-            CreateConnection(visualNodesLabyrinth[15], visualNodesLabyrinth[9], 1);
-
-            CreateConnection(visualNodesLabyrinth[11], visualNodesLabyrinth[5], 1);
-            CreateConnection(visualNodesLabyrinth[5], visualNodesLabyrinth[11], 1);
-
-            CreateConnection(visualNodesLabyrinth[12], visualNodesLabyrinth[18], 1);
-            CreateConnection(visualNodesLabyrinth[18], visualNodesLabyrinth[12], 1);
-
-            CreateConnection(visualNodesLabyrinth[13], visualNodesLabyrinth[19], 1);
-            CreateConnection(visualNodesLabyrinth[19], visualNodesLabyrinth[13], 1);
-
-            CreateConnection(visualNodesLabyrinth[13], visualNodesLabyrinth[14], 1);
-            CreateConnection(visualNodesLabyrinth[14], visualNodesLabyrinth[13], 1);
-
-            CreateConnection(visualNodesLabyrinth[14], visualNodesLabyrinth[15], 1);
-            CreateConnection(visualNodesLabyrinth[15], visualNodesLabyrinth[14], 1);
-
-            CreateConnection(visualNodesLabyrinth[14], visualNodesLabyrinth[20], 1);
-            CreateConnection(visualNodesLabyrinth[20], visualNodesLabyrinth[14], 1);
-
-            CreateConnection(visualNodesLabyrinth[16], visualNodesLabyrinth[17], 1);
-            CreateConnection(visualNodesLabyrinth[17], visualNodesLabyrinth[16], 1);
-
-            CreateConnection(visualNodesLabyrinth[17], visualNodesLabyrinth[11], 1);
-            CreateConnection(visualNodesLabyrinth[11], visualNodesLabyrinth[17], 1);
-
-            CreateConnection(visualNodesLabyrinth[17], visualNodesLabyrinth[23], 1);
-            CreateConnection(visualNodesLabyrinth[23], visualNodesLabyrinth[17], 1);
-
-            CreateConnection(visualNodesLabyrinth[18], visualNodesLabyrinth[19], 1);
-            CreateConnection(visualNodesLabyrinth[19], visualNodesLabyrinth[18], 1);
-
-            CreateConnection(visualNodesLabyrinth[20], visualNodesLabyrinth[21], 1);
-            CreateConnection(visualNodesLabyrinth[21], visualNodesLabyrinth[20], 1);
-
-            CreateConnection(visualNodesLabyrinth[20], visualNodesLabyrinth[26], 1);
-            CreateConnection(visualNodesLabyrinth[26], visualNodesLabyrinth[20], 1);
-
-            CreateConnection(visualNodesLabyrinth[22], visualNodesLabyrinth[16], 1);
-            CreateConnection(visualNodesLabyrinth[16], visualNodesLabyrinth[22], 1);
-
-            CreateConnection(visualNodesLabyrinth[23], visualNodesLabyrinth[29], 1);
-            CreateConnection(visualNodesLabyrinth[29], visualNodesLabyrinth[23], 1);
-
-            CreateConnection(visualNodesLabyrinth[24], visualNodesLabyrinth[25], 1);
-            CreateConnection(visualNodesLabyrinth[25], visualNodesLabyrinth[24], 1);
-
-            CreateConnection(visualNodesLabyrinth[25], visualNodesLabyrinth[26], 1);
-            CreateConnection(visualNodesLabyrinth[26], visualNodesLabyrinth[25], 1);
-
-            CreateConnection(visualNodesLabyrinth[26], visualNodesLabyrinth[27], 1);
-            CreateConnection(visualNodesLabyrinth[27], visualNodesLabyrinth[26], 1);
-
-            CreateConnection(visualNodesLabyrinth[27], visualNodesLabyrinth[28], 1);
-            CreateConnection(visualNodesLabyrinth[28], visualNodesLabyrinth[27], 1);
-
-            CreateConnection(visualNodesLabyrinth[28], visualNodesLabyrinth[22], 1);
-            CreateConnection(visualNodesLabyrinth[22], visualNodesLabyrinth[28], 1);
+                        CreateConnection(toVisual, fromVisual, weight);
+                    }
+                }
+            }
         }
     }
+
+
     private void CreateConnection(NodeGraphVisual fromVisual, NodeGraphVisual toVisual, int weight)
     {
         NodeGraph fromNode = dynamicNodesLabyrinth.GetElement(visualNodesLabyrinth.IndexOf(fromVisual));
