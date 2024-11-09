@@ -7,7 +7,7 @@ public class NodeGraphVisual : MonoBehaviour
 
     private void OnMouseDown()
     {
-        TDAGraphManager graphManager = FindObjectOfType<TDAGraphManager>();
+        TestGraphs.TDAGraphManager graphManager = FindObjectOfType<TestGraphs.TDAGraphManager>();
         if (graphManager != null)
         {
             graphManager.OnNodeClicked(this);
