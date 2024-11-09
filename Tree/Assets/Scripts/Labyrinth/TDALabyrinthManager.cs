@@ -217,10 +217,6 @@ namespace TestLabyrinth
                     arrowHead.transform.Rotate(0, 0, 90);
                     arrowHead.transform.SetParent(content);
                 }
-
-                ConnectionGraphVisual connection = lineObj.AddComponent<ConnectionGraphVisual>();
-                connection.conectName = $"{fromVisual.nodeName} - {toVisual.nodeName}";
-                connection.weight = weight;
             }
         }
     }

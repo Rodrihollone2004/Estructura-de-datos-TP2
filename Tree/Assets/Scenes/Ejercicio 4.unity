@@ -551,6 +551,75 @@ MonoBehaviour:
   lineMaterial: {fileID: 2100000, guid: 3900ffd445058be4fad889a41c019dcc, type: 2}
   arrowObject: {fileID: 2881921264747710600, guid: bc00f96e4ac89514b87cdd90946bbd47, type: 3}
   content: {fileID: 1892020637}
+  connectionNodesGraph:
+  - fromNode: {fileID: 1911587185}
+    toNode: {fileID: 1454858876}
+    conectName: Root - 2
+    weight: 8
+  - fromNode: {fileID: 1911587185}
+    toNode: {fileID: 1823525188}
+    conectName: Root - 3
+    weight: 2
+  - fromNode: {fileID: 1454858876}
+    toNode: {fileID: 48265865}
+    conectName: 2 - 4
+    weight: 4
+  - fromNode: {fileID: 1454858876}
+    toNode: {fileID: 1898629451}
+    conectName: 2 - 5
+    weight: 9
+  - fromNode: {fileID: 1823525188}
+    toNode: {fileID: 48265865}
+    conectName: 3 - 4
+    weight: 3
+  - fromNode: {fileID: 1823525188}
+    toNode: {fileID: 463745848}
+    conectName: 3 - 6
+    weight: 5
+  - fromNode: {fileID: 48265865}
+    toNode: {fileID: 6192370}
+    conectName: 4 - 8
+    weight: 3
+  - fromNode: {fileID: 1898629451}
+    toNode: {fileID: 791507837}
+    conectName: 5 - 10
+    weight: 7
+  - fromNode: {fileID: 463745848}
+    toNode: {fileID: 1607875865}
+    conectName: 6 - 7
+    weight: 1
+  - fromNode: {fileID: 463745848}
+    toNode: {fileID: 6192370}
+    conectName: 6 - 8
+    weight: 2
+  - fromNode: {fileID: 1607875865}
+    toNode: {fileID: 252493079}
+    conectName: 7 - 9
+    weight: 9
+  - fromNode: {fileID: 1607875865}
+    toNode: {fileID: 2128881271}
+    conectName: 7 - 11
+    weight: 15
+  - fromNode: {fileID: 6192370}
+    toNode: {fileID: 252493079}
+    conectName: 8 - 9
+    weight: 6
+  - fromNode: {fileID: 252493079}
+    toNode: {fileID: 2128881271}
+    conectName: 9 - 11
+    weight: 11
+  - fromNode: {fileID: 791507837}
+    toNode: {fileID: 252493079}
+    conectName: 10 - 9
+    weight: 1
+  - fromNode: {fileID: 791507837}
+    toNode: {fileID: 653600010}
+    conectName: 10 - 12
+    weight: 8
+  - fromNode: {fileID: 2128881271}
+    toNode: {fileID: 653600010}
+    conectName: 11 - 12
+    weight: 4
 --- !u!4 &450216966
 Transform:
   m_ObjectHideFlags: 0

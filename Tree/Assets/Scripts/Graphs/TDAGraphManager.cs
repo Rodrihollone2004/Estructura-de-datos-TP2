@@ -18,6 +18,7 @@ namespace TestGraphs
 
         [Header("Lists Nodos y conexiones")]
         private List<NodeGraphVisual> visualNodesGraph;
+        [SerializeField] private List<ConnectionGraphVisual> connectionNodesGraph;
 
         private NodeGraph startNode;
         private TDADynamicGraph<NodeGraph> dynamicNodesGraph;
@@ -136,37 +137,12 @@ namespace TestGraphs
 
         private void ShowConnections()
         {
-            if (dynamicNodesGraph.Cardinality() > 0)
+            foreach (ConnectionGraphVisual connection in connectionNodesGraph)
             {
-                CreateConnection(visualNodesGraph[0], visualNodesGraph[1], 8);
-                CreateConnection(visualNodesGraph[0], visualNodesGraph[2], 2);
-
-                CreateConnection(visualNodesGraph[1], visualNodesGraph[3], 4);
-                CreateConnection(visualNodesGraph[1], visualNodesGraph[4], 9);
-
-                CreateConnection(visualNodesGraph[2], visualNodesGraph[3], 3);
-                CreateConnection(visualNodesGraph[2], visualNodesGraph[5], 5);
-
-                CreateConnection(visualNodesGraph[3], visualNodesGraph[7], 3);
-
-                CreateConnection(visualNodesGraph[4], visualNodesGraph[9], 7);
-
-                CreateConnection(visualNodesGraph[5], visualNodesGraph[6], 1);
-                CreateConnection(visualNodesGraph[5], visualNodesGraph[7], 2);
-
-                CreateConnection(visualNodesGraph[6], visualNodesGraph[8], 9);
-                CreateConnection(visualNodesGraph[6], visualNodesGraph[10], 15);
-
-                CreateConnection(visualNodesGraph[7], visualNodesGraph[8], 6);
-
-                CreateConnection(visualNodesGraph[8], visualNodesGraph[10], 11);
-
-                CreateConnection(visualNodesGraph[9], visualNodesGraph[8], 1);
-                CreateConnection(visualNodesGraph[9], visualNodesGraph[11], 8);
-
-                CreateConnection(visualNodesGraph[10], visualNodesGraph[11], 4);
+                CreateConnection(connection.fromNode, connection.toNode, connection.weight);
             }
         }
+
         private void CreateConnection(NodeGraphVisual fromVisual, NodeGraphVisual toVisual, int weight)
         {
             NodeGraph fromNode = dynamicNodesGraph.GetElement(visualNodesGraph.IndexOf(fromVisual));
@@ -176,32 +152,10 @@ namespace TestGraphs
                 && dynamicNodesGraph.Contains(toNode)
                 && dynamicNodesGraph.AddConnection(fromNode, toNode, weight))
             {
-                GameObject lineObj = new GameObject("ConnectionLine");
-                LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-                lineObj.transform.SetParent(content);
-                lineRenderer.material = lineMaterial;
-                lineRenderer.startWidth = 0.1f;
-                lineRenderer.endWidth = 0.1f;
-
                 Vector3 posFrom = fromVisual.transform.position;
                 Vector3 posTo = toVisual.transform.position;
-                lineRenderer.SetPosition(0, posFrom);
-                lineRenderer.SetPosition(1, posTo);
 
-                if (arrowObject != null)
-                {
-                    Vector3 direction = (posTo - posFrom).normalized;
-                    float arrowOffset = 0.7f;
-                    Vector3 arrowPosition = posTo - direction * arrowOffset;
-
-                    GameObject arrowHead = Instantiate(arrowObject, arrowPosition, Quaternion.LookRotation(direction));
-                    arrowHead.transform.Rotate(0, 0, 90);
-                    arrowHead.transform.SetParent(content);
-                }
-
-                ConnectionGraphVisual connection = lineObj.AddComponent<ConnectionGraphVisual>();
-                connection.conectName = $"{fromVisual.nodeName} - {toVisual.nodeName}";
-                connection.weight = weight;
+                Debug.DrawLine(posFrom, posTo, Color.black, 10f);
             }
         }
     }
