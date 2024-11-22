@@ -22,12 +22,14 @@ namespace TestLabyrinth
         [SerializeField] private NodeGraphVisual exitNode;
 
         [SerializeField] bool isExit;
+        [SerializeField] int indexNodes;
 
         private NodeGraph currentNode;
         private TDADynamicLabyrinth<NodeGraph> dynamicNodesLabyrinth;
 
         private void Awake()
         {
+            indexNodes = 0;
             dynamicNodesLabyrinth = new TDADynamicLabyrinth<NodeGraph>();
             visualNodesLabyrinth = new List<NodeGraphVisual>();
         }
@@ -35,6 +37,13 @@ namespace TestLabyrinth
         private void Start()
         {
             NodeGraphVisual[] nodes = GetComponentsInChildren<NodeGraphVisual>();
+
+            foreach (NodeGraphVisual nodeVisual in nodes)
+            {
+                nodeVisual.weight = indexNodes;
+                indexNodes++;
+            }
+            
             for (int i = 0; i < nodes.Length; i++)
             {
                 visualNodesLabyrinth.Add(nodes[i]);

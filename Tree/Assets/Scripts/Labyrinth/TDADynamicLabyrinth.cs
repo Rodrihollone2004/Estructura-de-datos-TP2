@@ -37,6 +37,11 @@ public class TDADynamicLabyrinth<T> : TDA<T>
         return true;
     }
 
+    public void ClearConnections(T from)
+    {
+        nodes[from].Clear();
+    }
+
     public override int Cardinality() => size;
 
     public override bool Contains(T element) => nodes.ContainsKey(element);
