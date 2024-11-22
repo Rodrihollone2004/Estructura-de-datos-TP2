@@ -61,7 +61,6 @@ public class LabyrinthMaker : MonoBehaviour
         if (StartNode != null)
         {
             currentNode = dynamicNodesLabyrinth.GetElement(StartNode.weight);
-            player.transform.position = visualNodesLabyrinth[currentNode.weight].transform.position;
         }
 
         if (isExit && ExitNode != null)
@@ -188,15 +187,13 @@ public class LabyrinthMaker : MonoBehaviour
             }
         }
 
-        ShowConnections(); 
-
+        ShowConnections();
     }
 
     private IEnumerator MovePlayerAlongPath(List<NodeGraph> path)
     {
         foreach (NodeGraph node in path)
         {
-            Debug.Log("Nodo: " + node.name);
             yield return new WaitForSeconds(delayPlayerTravel);
 
             player.transform.position = visualNodesLabyrinth[node.weight].transform.position;
