@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LabyrinthMaker : MonoBehaviour
@@ -7,6 +8,7 @@ public class LabyrinthMaker : MonoBehaviour
     [Header("Player")]
     [SerializeField] private GameObject player;
     [SerializeField] private float delayPlayerTravel;
+    [SerializeField] private TMP_Text textPath;
 
     [Header("Lines")]
     [SerializeField] private Material lineMaterial;
@@ -68,11 +70,13 @@ public class LabyrinthMaker : MonoBehaviour
             SearchExitPath(ExitNode);
             isExit = false;
         }
-        else if (isExit && ExitNode == null)
+        else if (isExit && ExitNode == null || isExit && StartNode == null)
         {
-            Debug.Log("Tenga un nodo de salida seleccionado");
+            Debug.Log("Asegurese de tener los nodos de inicio y salida implementados");
             isExit = false;
         }
+
+        ShowConnections();
     }
 
     public void SearchExitPath(NodeLabyrinthMaker ExitNode)
@@ -83,6 +87,8 @@ public class LabyrinthMaker : MonoBehaviour
 
         if (path != null)
         {
+            textPath.text = "Path found";
+
             foreach (NodeGraph node in path)
             {
                 Debug.Log(node.name);
@@ -92,6 +98,7 @@ public class LabyrinthMaker : MonoBehaviour
         }
         else
         {
+            textPath.text = "Path not found";
             Debug.Log("No hay camino hacia " + ExitNode.nodeName);
         }
     }
@@ -186,8 +193,6 @@ public class LabyrinthMaker : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-
-        ShowConnections();
     }
 
     private IEnumerator MovePlayerAlongPath(List<NodeGraph> path)
