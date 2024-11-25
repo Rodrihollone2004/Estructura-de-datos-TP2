@@ -23,8 +23,11 @@ namespace TestGraphs
         private NodeGraph startNode;
         private TDADynamicGraph<NodeGraph> dynamicNodesGraph;
 
+        [SerializeField] int indexNodes;
+
         private void Awake()
         {
+            indexNodes = 0;
             dynamicNodesGraph = new TDADynamicGraph<NodeGraph>();
             visualNodesGraph = new List<NodeGraphVisual>();
         }
@@ -32,6 +35,13 @@ namespace TestGraphs
         private void Start()
         {
             NodeGraphVisual[] nodes = GetComponentsInChildren<NodeGraphVisual>();
+
+            foreach (NodeGraphVisual nodeVisual in nodes)
+            {
+                nodeVisual.weight = indexNodes;
+                indexNodes++;
+            }
+
             for (int i = 0; i < nodes.Length; i++)
             {
                 visualNodesGraph.Add(nodes[i]);
