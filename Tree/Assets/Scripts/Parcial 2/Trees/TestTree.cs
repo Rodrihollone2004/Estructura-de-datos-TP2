@@ -23,6 +23,7 @@ namespace TestTree
         [SerializeField] private TMP_Text actualHeight;
         [SerializeField] private bool push = false;
         [SerializeField] private int num = 0;
+        private bool useABB = true;
 
         private void Awake()
         {
@@ -38,15 +39,20 @@ namespace TestTree
             for (int i = 0; i < myArray.Length; i++)
             {
                 treeABB.InsertValue(myArray[i]);
-            }
-
-            for (int i = 0; i < myArray.Length; i++)
-            {
                 treeAVL.Insert(myArray[i]);
             }
+        }
 
-            //Print(treeABB); //  -------- Ejercicio 1 (ABB Tree) --------
-            Print(treeAVL); //  -------- Ejercicio 2 (AVL Tree) --------
+        public void ShowABBButton() //  -------- Ejercicio 1 (ABB Tree) --------
+        {
+            useABB = true;
+            Print(treeABB);
+        }
+
+        public void ShowAVLButton() //  -------- Ejercicio 1 (ABB Tree) --------
+        {
+            useABB = false;
+            Print(treeAVL);
         }
 
 
@@ -56,11 +62,17 @@ namespace TestTree
             {
                 push = false;
 
-                //treeABB.InsertValue(num); //  -------- Ejercicio 1 (ABB Tree) --------
-                //Print(treeABB);
+                if (useABB)
+                {
+                    treeABB.InsertValue(num); //  -------- Ejercicio 1 (ABB Tree) --------
+                    Print(treeABB);
+                }
 
-                treeAVL.InsertValue(num); //  -------- Ejercicio 2 (AVL Tree) --------
-                Print(treeAVL);
+                if (!useABB)
+                {
+                    treeAVL.InsertValue(num); //  -------- Ejercicio 2 (AVL Tree) --------
+                    Print(treeAVL);
+                }
             }
         }
 
